@@ -1,15 +1,21 @@
 const gameBoardNodeFactory = () => {
-    let nodeValue = {};
-    const changeNodeValue = (ship) => {
+    let nodeValue = null;
+
+    const changeNodeValueToShip = (ship) => {
         nodeValue = ship;
     }
+    const changeNodeValueToMiss = () => {
+        nodeValue = 'miss';
+    }
+   
     const isNodeEmpty = () => {
-        if(this.value === {}){
+        if(nodeValue === null){
             return true;
         }
         return false;
     }
+    const getNodeValue = () => nodeValue;
     
-    return {changeNodeValue, isNodeEmpty};
+    return {changeNodeValueToShip, isNodeEmpty, getNodeValue, changeNodeValueToMiss};
 };
 export {gameBoardNodeFactory};
