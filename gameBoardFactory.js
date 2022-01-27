@@ -1,8 +1,10 @@
 import { gameBoardNodeFactory } from "./gameBoardNodeFactory";
 import { shipFactory } from "./shipFactory";
 
-const gameBoardFactory = () => {
+const gameBoardFactory = (row, column) => {
   let gameBoardMatrix = [];
+  let shipsArray = [];
+  let missedShotArray = [];
 
   const createGameBoardMatrix = (row, column) => {
     for (let i = 0; i < row; i++) {
@@ -11,9 +13,9 @@ const gameBoardFactory = () => {
     }
   };
 
-  const populateGameBoardMatrix = () => {
-    for (let i = 0; i < gameBoardMatrix.length; i++) {
-      for (let j = 0; j < gameBoardMatrix[i].length; j++) {
+  const populateGameBoardMatrix = (row, column) => {
+    for (let i = 0; i < row; i++) {
+      for (let j = 0; j < column; j++) {
         gameBoardMatrix[i][j] = gameBoardNodeFactory();
       }
     }
@@ -33,7 +35,7 @@ const gameBoardFactory = () => {
     }
     return true;
   };
-  
+
   const canCreateShipAtCoords = (row, col, shipLength) => {
     return (
       checkLengthForShipPlacement(row, shipLength) &&
@@ -42,23 +44,48 @@ const gameBoardFactory = () => {
   };
 
   const placeShipOnCoords = (row, col, length, ship) => {
-    for (row; row < row + length; row++) {
-      gameBoardMatrix[row][col].changeNodeValue(ship);
+    for (let i = row; i < row + length; i++) {
+      gameBoardMatrix[i][col].changeNodeValueToShip(ship);
     }
   };
 
   const createShipAtCoord = (row, col, length) => {
     if (canCreateShipAtCoords(row, col, length)) {
       const ship = shipFactory(length);
-      placeShipOnCoords(ship);
+      placeShipOnCoords(row, col, length, ship);
+      shipsArray.push(ship);
       return true;
     }
     return false;
   };
 
-  const checkCoordinates = (row, column) => {};
-  const receiveAttack = (row, column) => {};
+  const checkCoordinatesForPossibleHit = (row, column) => {
+    return gameBoardMatrix[row][column].isNodeEmpty();
+  };
 
-  createGameBoardMatrix();
-  populateGameBoardMatrix();
+  const receiveAttack = (row, column) => {
+    if (checkCoordinatesForPossibleHit(row, column)) {
+      gameBoardMatrix[row][column].changeNodeValueToMiss();
+      missedShotArray.push([row,column]);
+      return false;
+    } else {
+      return gameBoardMatrix[row][column].getNodeValue().hit();
+    }
+  };
+  const checkDamageStatusOfShips = () => {
+    return shipsArray.every((ship) => ship.isDead());
+  };
+  const getMissedShotCoordsArr = () => missedShotArray;
+
+
+  createGameBoardMatrix(row, column);
+  populateGameBoardMatrix(row, column);
+
+  return {
+    createShipAtCoord,
+    receiveAttack,
+    checkDamageStatusOfShips,
+    getMissedShotCoordsArr
+  };
 };
+export { gameBoardFactory };
