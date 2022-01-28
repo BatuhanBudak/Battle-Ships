@@ -1,9 +1,10 @@
 
 const ComputerPlayer = (board) => {
     let computerBoard = board;
-    let doesPlayed = false;
+    let hasPlayed = false;
+    let takenShotsCoordinatesArray = [];
 
-    const changePlayStatus = () => doesPlayed = true;
+    const changePlayStatus = () => hasPlayed = !hasPlayed;
 
     const randomIntFromInterval= (min, max) => { // min and max included 
         return Math.floor(Math.random() * (max - min + 1) + min)
@@ -18,13 +19,16 @@ const ComputerPlayer = (board) => {
         return computerBoard.receiveAttack(row, col);
     }
     const attack = (enemy) => {
-        changePlayStatus();
-        let missedShotsArr = enemy.getBoardOfPlayer().getMissedShotCoordsArr();
-        let [row, col] = generateRandomShootCoords();
-        while(missedShotsArr.includes([row,col])){
-            [row,col] = generateRandomShootCoords();
+        if(!hasPlayed){
+            changePlayStatus();
+            let missedShotsArr = enemy.getBoardOfPlayer().getMissedShotCoordsArr();
+            let [row, col] = generateRandomShootCoords();
+            while(missedShotsArr.includes([row,col]) || takenShotsCoordinatesArray.includes([row, col])){
+                [row,col] = generateRandomShootCoords();
+            }
+            takenShotsCoordinatesArray.push([row, col]);
+            return enemy.receiveAttack(row, col);
         }
-        return enemy.receiveAttack(row, col);
     }
     return {attack, receiveAttack};
 }

@@ -1,15 +1,19 @@
-const Player = (board) => {
+const Player = (board, computer) => {
     let playerBoard = board;
-    let doesPlayed = false;
+    let hasPlayed = false;
+    let enemy = computer;
 
-    const changePlayStatus = () => doesPlayed = true;
+    const changePlayStatus = () => hasPlayed = !hasPlayed;
 
     const receiveAttack = (row, col) => {
        return playerBoard.receiveAttack(row, col);
     }
-    const attack = (row, col, enemy) => {
-        changePlayStatus();
-        return enemy.receiveAttack(row, col);
+    
+    const attack = (row, col) => {
+        if(!hasPlayed){
+            changePlayStatus();
+            return enemy.receiveAttack(row, col);
+        }
     }
     const getBoardOfPlayer = () => playerBoard;
     return {attack, receiveAttack, getBoardOfPlayer};
