@@ -65,10 +65,11 @@ const gameBoardFactory = (row, column) => {
 
   const receiveAttack = (row, column) => {
     if (checkCoordinatesForPossibleHit(row, column)) {
-      gameBoardMatrix[row][column].changeNodeValueToMiss();
-      missedShotArray.push([row,column]);
+      gameBoardMatrix[row][column].changeNodeStatusToMiss();
+      missedShotArray.push([row, column]);
       return false;
     } else {
+      gameBoardMatrix[row][column].changeNodeStatusHit();
       return gameBoardMatrix[row][column].getNodeValue().hit();
     }
   };
@@ -77,6 +78,7 @@ const gameBoardFactory = (row, column) => {
   };
   const getMissedShotCoordsArr = () => missedShotArray;
 
+  const getBoardMatrix = () => gameBoardMatrix;
 
   createGameBoardMatrix(row, column);
   populateGameBoardMatrix(row, column);
@@ -85,7 +87,8 @@ const gameBoardFactory = (row, column) => {
     createShipAtCoord,
     receiveAttack,
     checkDamageStatusOfShips,
-    getMissedShotCoordsArr
+    getMissedShotCoordsArr,
+    getBoardMatrix
   };
 };
 export { gameBoardFactory };
