@@ -1,21 +1,33 @@
 const gameBoardNodeFactory = () => {
-    let nodeValue = null;
+  let nodeValue = null;
+  let nodeStatus = "default";
 
-    const changeNodeValueToShip = (ship) => {
-        nodeValue = ship;
+  const changeNodeValueToShip = (ship) => {
+    nodeValue = ship;
+  };
+  const changeNodeStatusToMiss = () => {
+    nodeStatus = "miss";
+  };
+  const changeNodeStatusHit = () => {
+    nodeStatus = "hit";
+  };
+
+  const isNodeEmpty = () => {
+    if (nodeValue === null) {
+      return true;
     }
-    const changeNodeValueToMiss = () => {
-        nodeValue = 'miss';
-    }
-   
-    const isNodeEmpty = () => {
-        if(nodeValue === null){
-            return true;
-        }
-        return false;
-    }
-    const getNodeValue = () => nodeValue;
-    
-    return {changeNodeValueToShip, isNodeEmpty, getNodeValue, changeNodeValueToMiss};
+    return false;
+  };
+  const getNodeValue = () => nodeValue;
+  const getNodeStatus = () => nodeStatus;
+
+  return {
+    changeNodeValueToShip,
+    isNodeEmpty,
+    getNodeValue,
+    changeNodeStatusToMiss,
+    getNodeStatus,
+    changeNodeStatusHit,
+  };
 };
-export {gameBoardNodeFactory};
+export { gameBoardNodeFactory };
