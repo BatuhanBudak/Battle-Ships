@@ -1,10 +1,10 @@
-const createDomElements = (() => {
+
   const playerDomContainer = document.querySelector(".plyr-board-container");
   const computerDomContainer = document.querySelector(
     ".cmptr-board-container"
   );
   
-  const createBoardCells = () => {
+const createBoardCells = () => {
     for (let i = 0; i < 10; i++) {
       for (let j = 0; j < 10; j++) {
           let cell = document.createElement('div');
@@ -20,7 +20,7 @@ const createDomElements = (() => {
     }
   };
     
-    createBoardCells();
+
   //  playerDomContainer.addEventListener('click')
-})();
-export {createDomElements};
+
+export {createBoardCells};

@@ -1,16 +1,14 @@
 import {gameBoardFactory} from './gameBoardFactory';
 
-const playerDomContainer = document.querySelector(".plyr-board-container");
-const computerDomContainer = document.querySelector(
-  ".cmptr-board-container"
-);
 
-export const renderPlayerBoard = (arr) => {
-    for (let i = 0; i < arr.length; i++) {
-        for (let j = 0; j < arr[i].length; j++) {
-            let cell = document.querySelector(`.plyr-cell[data-index=${i}${j}]`);
-            let nodeStatus = arr[i][j].getNodeStatusFromBoard();
-            if(arr[i][j].getNodeValueFromBoard()){
+export const renderPlayerBoard = (factory) => {
+    let board = factory.getBoardMatrix();
+    for (let i = 0; i < board.length; i++) {
+        for (let j = 0; j < board[i].length; j++) {
+            let cell = document.querySelector(`.plyr-cell[data-index="${i}${j}"]`);
+            
+            let nodeStatus = factory.getNodeStatusFromBoard(i,j);
+            if(factory.getNodeValueFromBoard(i,j)){
                 switch(nodeStatus){
                     case('default'):{
                         cell.style.backgroundColor = 'green';
