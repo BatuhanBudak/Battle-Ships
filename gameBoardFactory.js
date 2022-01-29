@@ -23,36 +23,36 @@ const gameBoardFactory = (row, column) => {
   const isCoordEmpty = (x, y) => {
     return gameBoardMatrix[x][y].isNodeEmpty;
   };
-  const checkLengthForShipPlacement = (row, shipLength) => {
+  const checkLengthForVerticalShipPlacement = (row, shipLength) => {
     return row + shipLength <= gameBoardMatrix.length;
   };
 
-  const chechkNodesForShipPlacement = (x, y, shipLength) => {
-    for (x; x < shipLength; x++) {
-      if (!isCoordEmpty(x, y)) {
+  const chechkNodesForVerticalShipPlacement = (row, col, shipLength) => {
+    for (row; row < shipLength; row++) {
+      if (!isCoordEmpty(row, col)) {
         return false;
       }
     }
     return true;
   };
 
-  const canCreateShipAtCoords = (row, col, shipLength) => {
+  const canCreateShipAtCoordsVertically = (row, col, shipLength) => {
     return (
-      checkLengthForShipPlacement(row, shipLength) &&
-      chechkNodesForShipPlacement(row, col, shipLength)
+      checkLengthForVerticalShipPlacement(row, shipLength) &&
+      chechkNodesForVerticalShipPlacement(row, col, shipLength)
     );
   };
 
-  const placeShipOnCoords = (row, col, length, ship) => {
+  const placeShipOnCoordsVertically = (row, col, length, ship) => {
     for (let i = row; i < row + length; i++) {
       gameBoardMatrix[i][col].changeNodeValueToShip(ship);
     }
   };
 
-  const createShipAtCoord = (row, col, length) => {
-    if (canCreateShipAtCoords(row, col, length)) {
+  const createShipAtCoordVertically = (row, col, length) => {
+    if (canCreateShipAtCoordsVertically(row, col, length)) {
       const ship = shipFactory(length);
-      placeShipOnCoords(row, col, length, ship);
+      placeShipOnCoordsVertically(row, col, length, ship);
       shipsArray.push(ship);
       return true;
     }
@@ -79,16 +79,21 @@ const gameBoardFactory = (row, column) => {
   const getMissedShotCoordsArr = () => missedShotArray;
 
   const getBoardMatrix = () => gameBoardMatrix;
+  const getNodeValueFromBoard = (row, col) => gameBoardMatrix[row][col].getNodeValue(); 
+  const getNodeStatusFromBoard = (row, col) => gameBoardMatrix[row][col].getNodeStatus(); 
+
 
   createGameBoardMatrix(row, column);
   populateGameBoardMatrix(row, column);
 
   return {
-    createShipAtCoord,
+    createShipAtCoordVertically,
     receiveAttack,
     checkDamageStatusOfShips,
     getMissedShotCoordsArr,
-    getBoardMatrix
+    getBoardMatrix,
+    getNodeValueFromBoard,
+    getNodeStatusFromBoard
   };
 };
 export { gameBoardFactory };
