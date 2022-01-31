@@ -51,7 +51,11 @@ const gameBoardFactory = (row, column) => {
     }
   };
 
-  const createShipAtCoordVertically = (row, col, length) => {
+  const createShipAtCoordVertically = (data) => {
+    let row = +data[0].slice(0,1);
+    let col = +data[0].slice(1);
+    let length = +data[1];
+    let name = data[2];
     if (canCreateShipAtCoordsVertically(row, col, length)) {
       const ship = shipFactory(length);
       placeShipOnCoordsVertically(row, col, length, ship);
@@ -98,6 +102,8 @@ const gameBoardFactory = (row, column) => {
   createGameBoardMatrix(row, column);
   populateGameBoardMatrix(row, column);
 
+  pubsub.subscribe('shipDraggedVertically', createShipAtCoordVertically);
+  pubsub.subscribe('shipDraggedHorizontally', ) 
 
   return {
     createShipAtCoordVertically,

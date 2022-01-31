@@ -1,37 +1,98 @@
+.main-container {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+.plyr-board-container {
+  width: 400px;
+  height: 400px;
+  display: flex;
+  flex-wrap: wrap;
+  background-color: aqua;
+  outline: 0.1px solid black;
+}
+.cmptr-board-container {
+  width: 400px;
+  height: 400px;
+  display: flex;
+  flex-wrap: wrap;
+  background-color: aquamarine;
+  outline: 0.1px solid black;
+}
+.ship-container {
+  width: 400px;
+  height: 400px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: space-evenly;
+  gap: 15px;
+  background-color: lightgray;
+  outline: 0.1px solid black;
+}
 
-.main-container{
-    display: flex;
-    justify-content: space-around;
-    margin-top: 20px;
+.plyr-cell {
+  width: 40px;
+  height: 40px;
+  box-sizing: border-box;
+  background-color: lightgray;
+  outline: 0.1px solid black;
 }
-.plyr-board-container{
-    width: 400px;
-    height: 400px;
-    display: flex;
-    flex-wrap: wrap;
-    background-color: aqua;
-    outline: 0.1px solid black;
+.cmptr-cell {
+  width: 40px;
+  height: 40px;
+  box-sizing: border-box;
+  background-color: lightgray;
+  outline: 0.1px solid black;
 }
-.cmptr-board-container{
-    width: 400px;
-    height: 400px;
-    display: flex;
-    flex-wrap: wrap;
-    background-color: aquamarine;
-    outline: 0.1px solid black;
+.ship {
+  background-color: lightgreen;
+  outline: 0.1px solid black;
+}
+#carrier.h {
+  width: 200px;
+  height: 40px;
 }
 
-.plyr-cell{
-    width: 40px;
-    height: 40px;
-    box-sizing: border-box;
-    background-color: lightgray;
-    outline: 0.1px solid black;
+#battleship.h {
+  width: 160px;
+  height: 40px;
 }
-.cmptr-cell{
-    width: 40px;
-    height: 40px;
-    box-sizing: border-box;
-    background-color: lightgray;
-    outline: 0.1px solid black;
+#destroyer.h {
+  width: 120px;
+  height: 40px;
+}
+#submarine.h {
+  width: 120px;
+  height: 40px;
+}
+#patrol-boat.h {
+  width: 80px;
+  height: 40px;
+}
+#carrier.v {
+  width: 40px;
+  height: 200px;
+}
+#battleship.v {
+  width: 40px;
+  height: 160px;
+}
+#destroyer.v {
+  width: 40px;
+  height: 120px;
+}
+#submarine.v {
+  width: 40px;
+  height: 120px;
+}
+#patrol-boat.v {
+  width: 40px;
+  height: 80px;
+}
+.v {
+  writing-mode: vertical-lr;
+}
+.h {
+  text-align: justify;
 }
