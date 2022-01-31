@@ -1,16 +1,17 @@
-const Player = (board, computer) => {
+import { pubsub } from "./pubSub";
+
+const Player = (board) => {
     let playerBoard = board;
-    let enemy = computer;
-
-    const receiveAttack = (row, col) => {
-       return playerBoard.receiveAttack(row, col);
+    
+    const receiveAttack = (coords) => {
+       return playerBoard.receiveAttack(+coords[0], +coords[1]);
+       
     }
-
-    const attack = (row, col) => {
-        return enemy.receiveAttack(row, col);
-        
+    const attack = (coords) => {
+        pubsub.publish('playerAttacks', coords);
     }
-    const getBoardOfPlayer = () => playerBoard;
-    return {attack, receiveAttack, getBoardOfPlayer};
+    pubsub.subscribe('playerClickedOnCmptrcell', attack );
+    pubsub.subscribe('cmptrAttacks', receiveAttack );
+   
 }
 export {Player};

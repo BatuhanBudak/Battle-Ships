@@ -20,6 +20,12 @@ const gameBoardNodeFactory = () => {
   };
   const getNodeValue = () => nodeValue;
   const getNodeStatus = () => nodeStatus;
+  const toJSON = function toJSON() {
+    return {
+      nodeValue,
+      nodeStatus
+    };
+  };
 
   return {
     changeNodeValueToShip,
@@ -28,6 +34,7 @@ const gameBoardNodeFactory = () => {
     changeNodeStatusToMiss,
     getNodeStatus,
     changeNodeStatusHit,
+    toJSON
   };
 };
 export { gameBoardNodeFactory };

@@ -1,12 +1,16 @@
-
+import { pubsub } from "./pubSub";
+const width = 10;
   const playerDomContainer = document.querySelector(".plyr-board-container");
   const computerDomContainer = document.querySelector(
     ".cmptr-board-container"
   );
+  computerDomContainer.addEventListener('click', (e) => {
+    pubsub.publish('playerClickedOnCmptrcell', e.target.dataset.index);
+  })
   
 const createBoardCells = () => {
-    for (let i = 0; i < 10; i++) {
-      for (let j = 0; j < 10; j++) {
+    for (let i = 0; i < width; i++) {
+      for (let j = 0; j < width; j++) {
           let cell = document.createElement('div');
           cell.dataset.index = `${i}${j}`;
           cell.classList.add('plyr-cell');
@@ -21,6 +25,6 @@ const createBoardCells = () => {
   };
     
 
-  //  playerDomContainer.addEventListener('click')
+
 
 export {createBoardCells};

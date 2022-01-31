@@ -1,10 +1,11 @@
 import { gameBoardNodeFactory } from "./gameBoardNodeFactory";
+import { pubsub } from "./pubSub";
 import { shipFactory } from "./shipFactory";
 
 const gameBoardFactory = (row, column) => {
   let gameBoardMatrix = [];
   let shipsArray = [];
-  let missedShotArray = [];
+  
 
   const createGameBoardMatrix = (row, column) => {
     for (let i = 0; i < row; i++) {
@@ -19,6 +20,7 @@ const gameBoardFactory = (row, column) => {
         gameBoardMatrix[i][j] = gameBoardNodeFactory();
       }
     }
+    
   };
   const isCoordEmpty = (x, y) => {
     return gameBoardMatrix[x][y].isNodeEmpty;
@@ -54,46 +56,54 @@ const gameBoardFactory = (row, column) => {
       const ship = shipFactory(length);
       placeShipOnCoordsVertically(row, col, length, ship);
       shipsArray.push(ship);
+      pubsub.publish('playerBoardPopulated', JSON.stringify(gameBoardMatrix));
       return true;
     }
     return false;
   };
 
-  const checkCoordinatesForPossibleHit = (row, column) => {
-    return gameBoardMatrix[row][column].isNodeEmpty();
+  const checkCoordinatesForPossibleHit = (row, col) => {
+    return gameBoardMatrix[row][col].isNodeEmpty();
   };
 
-  const receiveAttack = (row, column) => {
-    if (checkCoordinatesForPossibleHit(row, column)) {
-      gameBoardMatrix[row][column].changeNodeStatusToMiss();
-      missedShotArray.push([row, column]);
+  const receiveAttack = (row, col) => {
+    if (checkCoordinatesForPossibleHit(row, col)) {
+      gameBoardMatrix[row][col].changeNodeStatusToMiss();
+      pubsub.publish('cmptrMissed',[row,col]);
+      pubsub.publish('cmptrAttackFinished', JSON.stringify(gameBoardMatrix[row][col]),row, col);
       return false;
     } else {
-      gameBoardMatrix[row][column].changeNodeStatusHit();
-      return gameBoardMatrix[row][column].getNodeValue().hit();
+      gameBoardMatrix[row][col].changeNodeStatusHit();
+      pubsub.publish('cmptrAttackFinished', JSON.stringify(gameBoardMatrix[row][col]),row, col);
+      return gameBoardMatrix[row][col].getNodeValue().hit();
+    }
+  };
+  const receiveAttackComputer = (row, col) => {
+    
+    if (checkCoordinatesForPossibleHit(row, col)) {
+      gameBoardMatrix[row][col].changeNodeStatusToMiss();
+      pubsub.publish('playerAttackFinished', JSON.stringify(gameBoardMatrix[row][col]),row, col);
+      return false;
+    } else {
+      gameBoardMatrix[row][col].changeNodeStatusHit();
+      pubsub.publish('playerAttackFinished', JSON.stringify(gameBoardMatrix[row][col]),row, col);
+      return gameBoardMatrix[row][col].getNodeValue().hit();
     }
   };
   const checkDamageStatusOfShips = () => {
     return shipsArray.every((ship) => ship.isDead());
   };
-  const getMissedShotCoordsArr = () => missedShotArray;
-
-  const getBoardMatrix = () => gameBoardMatrix;
-  const getNodeValueFromBoard = (row, col) => gameBoardMatrix[row][col].getNodeValue(); 
-  const getNodeStatusFromBoard = (row, col) => gameBoardMatrix[row][col].getNodeStatus(); 
-
+  
 
   createGameBoardMatrix(row, column);
   populateGameBoardMatrix(row, column);
+
 
   return {
     createShipAtCoordVertically,
     receiveAttack,
     checkDamageStatusOfShips,
-    getMissedShotCoordsArr,
-    getBoardMatrix,
-    getNodeValueFromBoard,
-    getNodeStatusFromBoard
+    receiveAttackComputer
   };
 };
 export { gameBoardFactory };

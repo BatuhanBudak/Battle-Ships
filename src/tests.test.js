@@ -14,7 +14,7 @@ test('Can get the node value from the board correctly', () => {
   gFactory.createShipAtCoordVertically(0, 0, 5);
   expect(gFactory.getNodeValueFromBoard(0,0)).toBeTruthy();
 })
-test.only('Can get the node status from the board correctly', () => {
+test('Can get the node status from the board correctly', () => {
   let gFactory = gameBoardFactory(5, 5);
   gFactory.createShipAtCoordVertically(0, 0, 5);
   expect(gFactory.getNodeStatusFromBoard(0,0)).toBe('default');

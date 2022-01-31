@@ -1,22 +1,22 @@
+import { pubsub } from "./pubSub";
 const ComputerPlayer = (board) => {
   let computerBoard = board;
   let takenShotsCoordinatesArray = [];
+  let missedShotsArr = [];
 
   const randomIntFromInterval = (min, max) => {
-    // min and max included
     return Math.floor(Math.random() * (max - min + 1) + min);
   };
   const generateRandomShootCoords = () => {
-    let row = randomIntFromInterval(0, 4); // This numbers will be changed after giving the matrix fixed size for setup
-    let col = randomIntFromInterval(0, 4); // This numbers will be changed after giving the matrix fixed size for setup
+    let row = randomIntFromInterval(0, 9);
+    let col = randomIntFromInterval(0, 9);
     return [row, col];
   };
 
-  const receiveAttack = (row, col) => {
-    return computerBoard.receiveAttack(row, col);
+  const receiveAttack = (coords) => {
+    return computerBoard.receiveAttackComputer(+coords[0], +coords[1]);
   };
-  const attack = (enemy) => {
-    let missedShotsArr = enemy.getBoardOfPlayer().getMissedShotCoordsArr();
+  function attack() {
     let [row, col] = generateRandomShootCoords();
     while (
       missedShotsArr.includes([row, col]) ||
@@ -25,8 +25,13 @@ const ComputerPlayer = (board) => {
       [row, col] = generateRandomShootCoords();
     }
     takenShotsCoordinatesArray.push([row, col]);
-    return enemy.receiveAttack(row, col);
-  };
-  return { attack, receiveAttack };
+    pubsub.publish("cmptrAttacks", [row, col]);
+  }
+  const cmptrAttacks = () => setTimeout(attack, 1000);
+  const addToMissedShotsArr = (coords) => missedShotsArr.push(coords);
+
+  pubsub.subscribe("playerAttacks", receiveAttack);
+  pubsub.subscribe("cmptrBoardRenderFinished", cmptrAttacks);
+  pubsub.subscribe("cmptrMissed", addToMissedShotsArr);
 };
 export { ComputerPlayer };
