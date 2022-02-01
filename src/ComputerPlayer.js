@@ -3,6 +3,7 @@ const ComputerPlayer = (board) => {
   let computerBoard = board;
   let takenShotsCoordinatesArray = [];
   let missedShotsArr = [];
+  let canAttack = false;
 
   const randomIntFromInterval = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1) + min);
@@ -14,18 +15,22 @@ const ComputerPlayer = (board) => {
   };
 
   const receiveAttack = (coords) => {
+    canAttack = true;
     return computerBoard.receiveAttackComputer(+coords[0], +coords[1]);
   };
   function attack() {
-    let [row, col] = generateRandomShootCoords();
-    while (
-      missedShotsArr.includes([row, col]) ||
-      takenShotsCoordinatesArray.includes([row, col])
-    ) {
-      [row, col] = generateRandomShootCoords();
+    if(canAttack){
+      let [row, col] = generateRandomShootCoords();
+      while (
+        missedShotsArr.includes([row, col]) ||
+        takenShotsCoordinatesArray.includes([row, col])
+      ) {
+        [row, col] = generateRandomShootCoords();
+      }
+      takenShotsCoordinatesArray.push([row, col]);
+      pubsub.publish("cmptrAttacks", [row, col]);
     }
-    takenShotsCoordinatesArray.push([row, col]);
-    pubsub.publish("cmptrAttacks", [row, col]);
+    canAttack = false;
   }
   const cmptrAttacks = () => setTimeout(attack, 1000);
   const addToMissedShotsArr = (coords) => missedShotsArr.push(coords);

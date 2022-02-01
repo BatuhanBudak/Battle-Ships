@@ -1,19 +1,38 @@
 import {gameBoardFactory} from './gameBoardFactory';
-import {renderPlayerBoard} from './UIController';
-import {createBoardCells} from './createDomElements';
+import {createPlayerBoardCells} from './createDomElements';
 import {Player} from './Player';
 import {ComputerPlayer} from './ComputerPlayer';
 import './style.css';
+import { pubsub } from './pubSub';
+import {render} from './UIController'
 
-createBoardCells();
-let gFactory = gameBoardFactory(10, 10);
-// gFactory.createShipAtCoordVertically(0, 0, 5);
 
-let cFactory = gameBoardFactory(10, 10);
-// cFactory.createShipAtCoordVertically(0, 0, 5);
-
-let computer = ComputerPlayer(cFactory);
+createPlayerBoardCells();
+let gFactory = gameBoardFactory('player');
 let player = Player(gFactory);
+
+const startGame = () => {
+    
+    let cFactory = gameBoardFactory('computer');
+    let computer = ComputerPlayer(cFactory);
+    cFactory.computerCreateShipAtCoordVertically(0,0, 5,'carrier');
+      
+}
+
+const endGame = (contestent) => {
+    switch(contestent){
+        case('player'):{
+            pubsub.publish("gameEnded", 'computer');
+        }
+        case('computer'):{
+            pubsub.publish("gameEnded", 'player');
+        }
+    }
+}
+
+pubsub.subscribe('allShipsPlaced', startGame);
+pubsub.subscribe('allShipsSunked', endGame);
+
 
 
 

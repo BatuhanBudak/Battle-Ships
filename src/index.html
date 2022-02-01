@@ -9,17 +9,26 @@
 </head>
 <body>
     <div class="main-container">
-        <div class="plyr-board-container"></div>
-        <div class="cmptr-board-container"></div>
+        <div class="player-container">
+            <h2>Player's Board</h2>
+            <div class="plyr-board-container"></div>
+        </div>
+        <div class="computer-container">
+            <h2>Computer's Board</h2>
+            <div class="cmptr-board-container hidden"></div>
+        </div>
+        <h1 id="info-header">Place Your Ships</h1>
         <div class="ship-container">
-        <div class="ship v" id="carrier" data-length="5" draggable="true"></div>
-        <div class="ship v" id="battleship" data-length="4" draggable="true" ></div>
-        <div class="ship v" id="destroyer" data-length="3" draggable="true"></div>
-        <div class="ship v" id="submarine" data-length="3" draggable="true"></div>
-        <div class="ship v" id="patrol-boat" data-length="2" draggable="true"></div>
-    </div> 
-    <button id="rotate-button">Rotate</button>
+            <div class="ship v" id="carrier" data-length="5" draggable="true"></div>
+            <div class="ship v" id="battleship" data-length="4" draggable="true" ></div>
+            <div class="ship v" id="destroyer" data-length="3" draggable="true"></div>
+            <div class="ship v" id="submarine" data-length="3" draggable="true"></div>
+            <div class="ship v" id="patrol-boat" data-length="2" draggable="true"></div>
+        </div> 
+        <button id="rotate-button">Rotate Ships</button>
+        <button class="restart-button hidden">Restart</button>
     </div>
+    
     
     
 </body>

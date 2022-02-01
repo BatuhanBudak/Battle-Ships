@@ -11,6 +11,7 @@
   flex-wrap: wrap;
   background-color: aqua;
   outline: 0.1px solid black;
+  flex-shrink: 0;
 }
 .cmptr-board-container {
   width: 400px;
@@ -19,6 +20,10 @@
   flex-wrap: wrap;
   background-color: aquamarine;
   outline: 0.1px solid black;
+  flex-shrink: 0;
+}
+.cmptr-board-container.hidden{
+  display: none;
 }
 .ship-container {
   width: 400px;
@@ -44,6 +49,13 @@
   box-sizing: border-box;
   background-color: lightgray;
   outline: 0.1px solid black;
+  cursor: crosshair;
+}
+.cmptr-cell.clicked{
+  cursor: not-allowed;
+}
+.gameEnd{
+  cursor: not-allowed;
 }
 .ship {
   background-color: lightgreen;
@@ -95,4 +107,18 @@
 }
 .h {
   text-align: justify;
+}
+#rotate-button{
+  display: block;
+  width: 100px;
+  height: 50px;
+}
+
+.restart-button{
+  display: block;
+  width: 100px;
+  height: 50px;
+}
+.restart-button.hidden{
+  display: none;
 }
