@@ -6,6 +6,7 @@ const Player = (board) => {
     
     const receiveAttack = (coords) => {
        canAttack = true;
+       pubsub.publish("attackFinished", 'Computer');
        return playerBoard.receiveAttack(+coords[0], +coords[1]);
     }
     const attack = (coords) => {

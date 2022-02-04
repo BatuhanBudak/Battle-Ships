@@ -16,6 +16,7 @@ const ComputerPlayer = (board) => {
 
   const receiveAttack = (coords) => {
     canAttack = true;
+    pubsub.publish("attackFinished", 'Player');
     return computerBoard.receiveAttackComputer(+coords[0], +coords[1]);
   };
   function attack() {
@@ -29,14 +30,17 @@ const ComputerPlayer = (board) => {
       }
       takenShotsCoordinatesArray.push([row, col]);
       pubsub.publish("cmptrAttacks", [row, col]);
+      
     }
     canAttack = false;
   }
   const cmptrAttacks = () => setTimeout(attack, 1000);
   const addToMissedShotsArr = (coords) => missedShotsArr.push(coords);
+  const stopAttacking = () => canAttack=false;
 
   pubsub.subscribe("playerAttacks", receiveAttack);
   pubsub.subscribe("cmptrBoardRenderFinished", cmptrAttacks);
   pubsub.subscribe("cmptrMissed", addToMissedShotsArr);
+  pubsub.subscribe('gameEnded', stopAttacking);
 };
 export { ComputerPlayer };

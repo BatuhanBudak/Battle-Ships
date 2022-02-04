@@ -2,10 +2,35 @@ import { pubsub } from "./pubSub";
 
 export const render = (() => {
   const computerDomContainer = document.querySelector(".cmptr-board-container");
-  const restartButton = document.querySelector('.restart-button.hidden');
-  restartButton.addEventListener('click',()=> {
+  const restartButton = document.querySelector(".restart-button.hidden");
+  const infoHeader = document.querySelector(".info-header");
+  const shipHeader = document.querySelector(".ship-header");
+  const hitHeader = document.querySelector('.hit-status');
+
+  restartButton.addEventListener("click", () => {
     window.location.reload();
-  })
+  });
+
+  const showCantPlaceShipMessage = (index) =>{
+    shipHeader.textContent = `Can't place ship on coordinates ${index[0]}-${index[1]}!`;
+    setTimeout(clearSunkShipInfo,3000);
+  }
+  const showGameStartedMessage = () => {
+    shipHeader.textContent = `Game has started!`;
+    setTimeout(clearSunkShipInfo,3000);
+  }
+
+  const shotHitStatus = (hitInfo) => {
+    if(hitInfo === 'hit'){
+      hitHeader.textContent = 'BOOM!It\'s a hit!';
+    }else{
+      hitHeader.textContent = 'Oops you missed!';
+    }
+    setTimeout(() => {
+      hitHeader.textContent = "";
+    },2000);
+  }
+
   function checkNodeValueAndStatus(node, cell) {
     let nodeStatus = node.nodeStatus;
     if (node.nodeValue) {
@@ -75,28 +100,57 @@ export const render = (() => {
     cell.removeEventListener("click", sendCoordinateInfo);
     cell.classList.add("clicked");
     checkNodeValueAndStatus(node, cell);
-    pubsub.publish("cmptrBoardRenderFinished", "finished");
+    pubsub.publish("cmptrBoardRenderFinished", "");
   };
 
-  const destroyExtraBoard = () => {
+  const destroyPlacementBoard = () => {
+    infoHeader.textContent = `Players's turn`;
     let shipContainer = document.querySelector(".ship-container");
     shipContainer.remove();
   };
+  const showCurrentPlayer = (contestent) => {
+    switch (contestent) {
+      case "Player": {
+        infoHeader.textContent = `Computer's Turn`;
+        break;
+      }
+      case "Computer": {
+        infoHeader.textContent = `Player's Turn`;
+        break;
+      }
+    }
+  };
+
+  const showSunkShipInfo = (data) => {
+    let currentPlayer;
+    data[0] === 'Player'? currentPlayer='Computer': currentPlayer='Player';
+    shipHeader.textContent = `${currentPlayer} has sunked ${data[0]}'s ${data[1]}`;
+    setTimeout(clearSunkShipInfo,3000);
+   
+  }
+  function clearSunkShipInfo(){
+    shipHeader.textContent='';
+  }
   const setEndGameUI = (winner) => {
-    console.log(`${winner} has won!`);
+    infoHeader.textContent = `Game Over! ${winner} has won!`;
     let [...computerCells] = computerDomContainer.childNodes;
     computerCells.forEach((cell) => {
       cell.removeEventListener("click", sendCoordinateInfo);
       cell.classList.toggle("gameEnd");
     });
-    restartButton.classList.toggle('hidden');
-    
+    restartButton.classList.toggle("hidden");
   };
 
   pubsub.subscribe("playerBoardPopulated", renderPlayerBoardForStart);
   pubsub.subscribe("playerAttackFinished", renderAttackedComputerNode);
   pubsub.subscribe("cmptrAttackFinished", renderPlayerBoardNode);
   pubsub.subscribe("allShipsPlaced", renderComputerBoardForStart);
-  pubsub.subscribe("allShipsPlaced", destroyExtraBoard);
+  pubsub.subscribe("allShipsPlaced", destroyPlacementBoard);
+  pubsub.subscribe("attackFinished", showCurrentPlayer);
+  pubsub.subscribe('emitShipAndPlayerName', showSunkShipInfo);
   pubsub.subscribe("gameEnded", setEndGameUI);
+  pubsub.subscribe("cantPlaceShipOnNode", showCantPlaceShipMessage);
+  pubsub.subscribe("allShipsPlaced", showGameStartedMessage);
+  pubsub.subscribe("sendHitStatus", shotHitStatus);
+
 })();

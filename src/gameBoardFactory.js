@@ -6,6 +6,7 @@ const gameBoardFactory = (name) => {
   let gameBoardMatrix = [];
   let shipsArray = [];
   let boardName = name;
+
   const createGameBoardMatrix = () => {
     for (let i = 0; i < 10; i++) {
       gameBoardMatrix.push([]);
@@ -21,15 +22,15 @@ const gameBoardFactory = (name) => {
     }
   };
   const isCoordEmpty = (x, y) => {
-    return gameBoardMatrix[x][y].isNodeEmpty;
+    return gameBoardMatrix[x][y].isNodeEmpty();
   };
   const checkLengthForVerticalShipPlacement = (row, shipLength) => {
     return row + shipLength <= gameBoardMatrix.length;
   };
 
   const chechkNodesForVerticalShipPlacement = (row, col, shipLength) => {
-    for (row; row < shipLength; row++) {
-      if (!isCoordEmpty(row, col)) {
+    for (let i=0; i < shipLength; i++) {
+      if (!isCoordEmpty(row+i, col)) {
         return false;
       }
     }
@@ -63,6 +64,7 @@ const gameBoardFactory = (name) => {
       haveShipsPlacedOnBoard();
       return true;
     }
+    pubsub.publish("cantPlaceShipOnNode", [row,col]);
     return false;
   };
 
@@ -71,8 +73,8 @@ const gameBoardFactory = (name) => {
   };
 
   const chechkNodesForHorizontalShipPlacement = (row, col, shipLength) => {
-    for (col; col < shipLength; col++) {
-      if (!isCoordEmpty(row, col)) {
+    for (let i=0; i < shipLength; i++) {
+      if (!isCoordEmpty(row, col+i)) {
         return false;
       }
     }
@@ -104,6 +106,7 @@ const gameBoardFactory = (name) => {
       haveShipsPlacedOnBoard();
       return true;
     }
+    pubsub.publish("cantPlaceShipOnNode", [row,col]);
     return false;
   };
   const computerCreateShipAtCoordVertically = (row, col, length, name) => {
@@ -139,6 +142,7 @@ const gameBoardFactory = (name) => {
         row,
         col
       );
+      pubsub.publish("sendHitStatus", 'miss')
       return false;
     } else {
       gameBoardMatrix[row][col].changeNodeStatusHit();
@@ -148,6 +152,7 @@ const gameBoardFactory = (name) => {
         row,
         col
       );
+      pubsub.publish("sendHitStatus", 'hit')
       return gameBoardMatrix[row][col].getNodeValue().hit();
     }
   };
@@ -160,6 +165,7 @@ const gameBoardFactory = (name) => {
         row,
         col
       );
+      pubsub.publish("sendHitStatus", 'miss');
       return false;
     } else {
       gameBoardMatrix[row][col].changeNodeStatusHit();
@@ -169,6 +175,7 @@ const gameBoardFactory = (name) => {
         row,
         col
       );
+      pubsub.publish("sendHitStatus", 'hit')
       return gameBoardMatrix[row][col].getNodeValue().hit();
     }
   };
@@ -177,6 +184,12 @@ const gameBoardFactory = (name) => {
       pubsub.publish("allShipsSunked", boardName);
     }
   };
+
+  const sentPlayerAndShipName = (shipId) => {
+    pubsub.publish("emitShipAndPlayerName", [boardName,shipId]);
+  }
+
+
   const haveShipsPlacedOnBoard = () => {
     if (shipsArray.length === 5) {
       pubsub.publish("allShipsPlaced", null);
@@ -189,6 +202,7 @@ const gameBoardFactory = (name) => {
   pubsub.subscribe("shipDraggedVertically", createShipAtCoordVertically);
   pubsub.subscribe("shipDraggedHorizontally", createShipAtCoordHorizontally);
   pubsub.subscribe("shipSinked", checkDamageStatusOfShips);
+  pubsub.subscribe("shipSinked", sentPlayerAndShipName);
 
   return {
     createShipAtCoordVertically,

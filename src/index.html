@@ -1,35 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Battle Ships</title>
-    
-</head>
-<body>
+  </head>
+  <body>
     <div class="main-container">
+      <h2 class="info-header">Place Your Ships Commander</h2>
+      <div class="game-area-container">
         <div class="player-container">
-            <h2>Player's Board</h2>
-            <div class="plyr-board-container"></div>
+          <h3 class="player-board-header hidden">Player's Board</h3>
+          <div class="plyr-board-container"></div>
         </div>
+        <h3 class="hit-status"></h3>
         <div class="computer-container">
-            <h2>Computer's Board</h2>
-            <div class="cmptr-board-container hidden"></div>
+          <h3 class="computer-board-header hidden">Computer's Board</h3>
+          <div class="cmptr-board-container hidden"></div>
         </div>
-        <h1 id="info-header">Place Your Ships</h1>
-        <div class="ship-container">
-            <div class="ship v" id="carrier" data-length="5" draggable="true"></div>
-            <div class="ship v" id="battleship" data-length="4" draggable="true" ></div>
-            <div class="ship v" id="destroyer" data-length="3" draggable="true"></div>
-            <div class="ship v" id="submarine" data-length="3" draggable="true"></div>
-            <div class="ship v" id="patrol-boat" data-length="2" draggable="true"></div>
-        </div> 
         <button id="rotate-button">Rotate Ships</button>
-        <button class="restart-button hidden">Restart</button>
+        <div class="ship-container">
+          <div
+            class="ship v"
+            id="carrier"
+            data-length="5"
+            draggable="true"
+          ></div>
+          <div
+            class="ship v"
+            id="battleship"
+            data-length="4"
+            draggable="true"
+          ></div>
+          <div
+            class="ship v"
+            id="destroyer"
+            data-length="3"
+            draggable="true"
+          ></div>
+          <div
+            class="ship v"
+            id="submarine"
+            data-length="3"
+            draggable="true"
+          ></div>
+          <div
+            class="ship v"
+            id="patrol-boat"
+            data-length="2"
+            draggable="true"
+          ></div>
+        </div>
+      </div>
+      <h2 class="ship-header"></h2>
+      <button class="restart-button hidden">Restart</button>
     </div>
-    
-    
-    
-</body>
+  </body>
 </html>

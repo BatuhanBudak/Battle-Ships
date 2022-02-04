@@ -77,6 +77,7 @@ function destroyShip(name){
 
 pubsub.subscribe('shipPlacedOnBoard', destroyShip);
 pubsub.subscribe('allShipsPlaced', removeRotateButton);
+// pubsub.subscribe('cantPlaceShipOnNode', cancelDrag);
 
 
 
